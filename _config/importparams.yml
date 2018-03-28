@@ -1,0 +1,9 @@
+---
+Name: realworld-populator
+---
+
+# Gutenberg import parameters
+Suilven\RealWorldPopulator\Gutenberg\Task\GutenbergExtractionTask:
+  max_pages: 100
+  max_paragraphs: 6
+
