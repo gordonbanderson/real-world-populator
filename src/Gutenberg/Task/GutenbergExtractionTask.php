@@ -28,7 +28,15 @@ class GutenbergExtractionTask extends BuildTask
     public function run($request)
     {
 
-        //Session::set("loggedInAs", 1);
+        // need a book and a title slug
+        $bookURL = $_GET['book'];
+        $title = $_GET['title'];
+
+        // optionally a blog name
+        $blogName = isset($_GET['blog']) ? $_GET['blog'] : 'Gutenberg';
+
+        $blogName = urlencode($blogName);
+
 
         $canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
         if (!$canAccess) {
@@ -40,9 +48,7 @@ class GutenbergExtractionTask extends BuildTask
             print(Director::is_cli() ? "$content\n" : "<p>$content</p>");
         };
 
-        $blog = Blog::get()->where(['Title' => 'Gutenberg'])->first();
-
-        error_log(get_class($blog));
+        $blog = Blog::get()->where(['Title' => $blogName])->first();
 
         if ($blog) {
             error_log('Reusing blog');
@@ -50,21 +56,11 @@ class GutenbergExtractionTask extends BuildTask
         } else {
             error_log('**** Creating new blog');
             $blog = new Blog();
-            $blog->Title = 'Gutenberg';
+            $blog->Title = $blogName;
             $blog->write();
             $blog->publish("Stage", "Live");
         }
 
-
-
-   //     $translatedBlogs = array();
-    //    $translatedBlogs[$blog->Locale] = $blog;
-
-    //    error_log(print_r($translatedBlogs, 1));
-    //    die;
-
-        $bookURL = $_GET['book'];
-        $title = $_GET['title'];
 
 
         $locale = i18n::get_locale();
@@ -126,12 +122,14 @@ class GutenbergExtractionTask extends BuildTask
                                 $extractTitle = str_replace(']', '', $extractTitle);
                                 $extractTitle = str_replace('<p>', '', $extractTitle);
                                 $extractTitle = str_replace('</p>', '', $extractTitle);
+                                $extractTitle = str_replace('<br/>>', '', $extractTitle);
                                 $extractTitle = trim($extractTitle, '');
+                                $extractTitle = $this->limit_words($extractTitle, 10); // minimize site of title
+
 
                                 $splits = explode('. ', $extractTitle);
                                 $extractTitle = ucwords($splits[0]);
                                 $post = null;
-
                                 $post = new GutenbergBookExtractBlogPost();
                                 $post->ParentID = $blog->ID;
                                 $post->Source = $title;
@@ -146,14 +144,20 @@ class GutenbergExtractionTask extends BuildTask
                                 $post->LastEdited = $date;
                                 $post->Locale = $locale;
                                 $post->write();
+
                                 $post->publish("Stage", "Live");
+
                                 $paras = array();
+
+                                $nPosts++;
+                                if ($nPosts >= $maxPages) {
+                                    $parsing = false;
+                                }
                             }
                         }
                     } else {
                         $para = $para . "\n" . $line;
                         echo '.';
-
                     }
                 }
 
@@ -177,6 +181,13 @@ class GutenbergExtractionTask extends BuildTask
     private function contains($needle, $haystack)
     {
         return strpos($haystack, $needle) !== false;
+    }
+
+
+    function limit_words($string, $word_limit)
+    {
+        $words = explode(" ",$string);
+        return implode(" ",array_splice($words,0,$word_limit));
     }
 
 
