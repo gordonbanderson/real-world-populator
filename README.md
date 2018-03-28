@@ -1,4 +1,4 @@
-# real-world-populator
+# SilverStripe Real World Data Populator
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -7,27 +7,12 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-**Note:** Replace ```Gordon Anderson``` ```gordonbanderson``` ```https://github.com/gordonbanderson``` ```gordon.b.anderson@gmail.com``` ```suilven``` ```real-world-populator``` ```Popuate your dev site with real world data``` with their correct values in [README.md](README.md), [CHANGELOG.md](CHANGELOG.md), [CONTRIBUTING.md](CONTRIBUTING.md), [LICENSE.md](LICENSE.md) and [composer.json](composer.json) files, then delete this line. You can run `$ php prefill.php` in the command line to make all replacements at once. Delete the file prefill.php as well.
-
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what
-PSRs you support to avoid any confusion with users and contributors.
-
-## Structure
-
-If any of the following are applicable to your project, then the directory structure should follow industry best practices by being named the following.
-
-```
-bin/        
-config/
-src/
-tests/
-vendor/
-```
+Source text and image data from real world sites to populate your development SilverStripe site.
 
 
 ## Install
 
-Via Composer
+Via Composer, SilverStripe 4+
 
 ``` bash
 $ composer require suilven/real-world-populator
@@ -35,20 +20,25 @@ $ composer require suilven/real-world-populator
 
 ## Usage
 
-``` php
-$skeleton = new Suilven\RealWorldPopulator();
-echo $skeleton->echoPhrase('Hello, League!');
+### Description
+```
+sake dev/tasks/gutenberg  book=<gutenberg book url> title='<title>'
+```
+
+###Example
+```bash
+sake dev/tasks/gutenberg  book=http://www.gutenberg.org/cache/epub/103/pg103.txt title='Around the World in 80 Days'
+```
+
+###Example, Creating a New Blog
+By default, the blog created and appended to is called Gutenberg.  Pass a blog parameter to override this.
+```bash
+sake dev/tasks/gutenberg  book=http://www.gutenberg.org/cache/epub/36/pg36.txt title='War of the World' --blog='HG Wells'
 ```
 
 ## Change log
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Testing
-
-``` bash
-$ composer test
-```
 
 ## Contributing
 
