@@ -13,7 +13,7 @@ Source text and image data from real world sites to populate your development Si
 Via Composer, SilverStripe 4+
 
 ``` bash
-$ composer require suilven/real-world-populator
+$ composer require --dev suilven/real-world-populator
 ```
 
 ## Usage
