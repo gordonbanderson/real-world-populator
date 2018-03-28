@@ -8,7 +8,6 @@
 
 namespace Suilven\RealWorldPopulator\Gutenberg\Controller;
 
-
 use SilverStripe\Blog\Model\BlogPostController;
 
 class GutenbergBookExtractBlogPostController extends BlogPostController

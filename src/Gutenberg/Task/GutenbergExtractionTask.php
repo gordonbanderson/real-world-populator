@@ -52,7 +52,6 @@ class GutenbergExtractionTask extends BuildTask
 
         if ($blog) {
             error_log('Reusing blog');
-
         } else {
             error_log('**** Creating new blog');
             $blog = new Blog();
@@ -99,7 +98,7 @@ class GutenbergExtractionTask extends BuildTask
                     echo "\t PARSING\n";
                     $parsing = true;
                     continue;
-                } else if ($this->contains('END OF THIS PROJECT GUTENBERG', $line) ||
+                } elseif ($this->contains('END OF THIS PROJECT GUTENBERG', $line) ||
                     $this->contains('END OF THE PROJECT GUTENBERG', $line)) {
                     echo "\t STOP PARSING\n";
                     $parsing = false;
@@ -160,8 +159,6 @@ class GutenbergExtractionTask extends BuildTask
                         echo '.';
                     }
                 }
-
-
             }
 
             fclose($handle);
@@ -186,8 +183,8 @@ class GutenbergExtractionTask extends BuildTask
 
     function limit_words($string, $word_limit)
     {
-        $words = explode(" ",$string);
-        return implode(" ",array_splice($words,0,$word_limit));
+        $words = explode(" ", $string);
+        return implode(" ", array_splice($words, 0, $word_limit));
     }
 
 
@@ -227,7 +224,5 @@ class GutenbergExtractionTask extends BuildTask
         $downloaded_file = fopen($save_to, 'w');
         fwrite($downloaded_file, $file_content);
         fclose($downloaded_file);
-
     }
-
 }
