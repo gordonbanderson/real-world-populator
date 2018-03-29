@@ -23,12 +23,12 @@ $ composer require --dev suilven/real-world-populator
 sake dev/tasks/gutenberg  book=<gutenberg book url> title='<title>'
 ```
 
-###Example
+### Example
 ```bash
 sake dev/tasks/gutenberg  book=http://www.gutenberg.org/cache/epub/103/pg103.txt title='Around the World in 80 Days'
 ```
 
-###Example, Creating a New Blog
+### Example, Creating a New Blog
 By default, the blog created and appended to is called Gutenberg.  Pass a blog parameter to override this.
 ```bash
 sake dev/tasks/gutenberg  book=http://www.gutenberg.org/cache/epub/36/pg36.txt title='War of the World' --blog='HG Wells'
