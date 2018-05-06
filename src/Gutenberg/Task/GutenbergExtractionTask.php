@@ -2,10 +2,12 @@
 
 namespace Suilven\RealWorldPopulator\Gutenberg\Task;
 
+use Html2Text\Html2Text;
 use SilverStripe\Blog\Model\Blog;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Security\Permission;
 use Suilven\RealWorldPopulator\Gutenberg\Controller\GutenbergBookExtractBlogPost;
@@ -61,7 +63,6 @@ class GutenbergExtractionTask extends BuildTask
         }
 
 
-
         $locale = i18n::get_locale();
 
         $slug = strtolower($title);
@@ -114,7 +115,7 @@ class GutenbergExtractionTask extends BuildTask
 
 
                             if (mt_rand(1, $maxParas) === 1 && (sizeof($paras) >= 2)) {
-                                $text = implode("\n", $paras);
+                                $bodyContent = implode("\n\n", $paras);
                                 $extractTitle = array_shift($paras);
                                 //Attempt to grad just the first sentence after removing para tags
                                 $extractTitle = str_replace('[', '', $extractTitle);
@@ -125,6 +126,10 @@ class GutenbergExtractionTask extends BuildTask
                                 $extractTitle = trim($extractTitle, '');
                                 $extractTitle = $this->limit_words($extractTitle, 10); // minimize site of title
 
+                                $html = new \Html2Text\Html2Text($extractTitle);
+
+                                $extractTitle = $html->getText();  // Hello, "WORLD"
+
 
                                 $splits = explode('. ', $extractTitle);
                                 $extractTitle = ucwords($splits[0]);
@@ -134,7 +139,8 @@ class GutenbergExtractionTask extends BuildTask
                                 $post->Source = $title;
                                 $post->Title = $extractTitle;
                                 $ctr++;
-                                $post->Content = trim($text);
+                                $content = new Html2Text($bodyContent);
+                                $post->Content = trim($content->getText());
                                 $past = time() - mt_rand(0, 3600 * 24 * 730);
                                 $date = date('Y-m-d', $past);
 
